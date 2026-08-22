@@ -265,7 +265,35 @@ function updateModeButton() {
 function prevSong() { if (currentIndex > 0) playSong(currentIndex - 1); }
 function nextSong() { if (currentIndex < allSongs.length - 1) playSong(currentIndex + 1); }
 
+function openAnimePage() {
+  var song = allSongs[currentIndex];
+  if (!song) return;
+  var url = 'https://animethemes.moe/anime/' + song.animeSlug;
+  window.open(url, '_blank');
+}
+
 function setRating(v) { currentRating = v; updateRatingDisplay(); }
+
+function onDecimalInput(el) {
+  var val = el.value.replace(/[^0-9.]/g, '');
+  var parts = val.split('.');
+  if (parts.length > 2) val = parts[0] + '.' + parts[1];
+  if (parts[1] && parts[1].length > 2) val = parts[0] + '.' + parts[1].substring(0, 2);
+  el.value = val;
+
+  var num = parseFloat(val);
+  if (!isNaN(num) && num >= 0 && num <= 10) {
+    currentRating = Math.round(num * 100) / 100;
+    updateStarsOnly();
+  }
+}
+
+function onDecimalKey(e) {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    saveAndNext();
+  }
+}
 
 function setDecimalRating() {
   var val = parseFloat(document.getElementById('decimal-input').value);
@@ -275,14 +303,21 @@ function setDecimalRating() {
   }
 }
 
-function updateRatingDisplay() {
+function updateStarsOnly() {
   var stars = document.querySelectorAll('.star');
   for (var i = 0; i < stars.length; i++) {
     var val = parseInt(stars[i].getAttribute('data-value'));
     stars[i].classList.toggle('active', val <= Math.ceil(currentRating));
   }
   document.getElementById('rating-display').textContent = currentRating.toFixed(2);
-  document.getElementById('decimal-input').value = currentRating > 0 ? currentRating.toFixed(2) : '';
+}
+
+function updateRatingDisplay() {
+  updateStarsOnly();
+  var input = document.getElementById('decimal-input');
+  if (document.activeElement !== input) {
+    input.value = currentRating > 0 ? currentRating.toFixed(2) : '';
+  }
 }
 
 function saveAndNext() {
@@ -340,12 +375,35 @@ function startVoting() {
 }
 
 document.addEventListener('keydown', function(e) {
-  if (document.activeElement && document.activeElement.tagName === 'INPUT') return;
+  var active = document.activeElement;
+  var isDecimalInput = active && active.id === 'decimal-input';
+
+  if (isDecimalInput) {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      saveAndNext();
+      return;
+    }
+    return;
+  }
+
+  if (active && active.tagName === 'INPUT') return;
+
   switch(e.key) {
     case ' ': e.preventDefault(); togglePlay(); break;
     case 'ArrowLeft': prevSong(); break;
     case 'ArrowRight': nextSong(); break;
     case 'Enter': saveAndNext(); break;
+  }
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+  var decimalInput = document.getElementById('decimal-input');
+  if (decimalInput) {
+    decimalInput.addEventListener('focus', function() {
+      var self = this;
+      setTimeout(function() { self.select(); }, 50);
+    });
   }
 });
 
