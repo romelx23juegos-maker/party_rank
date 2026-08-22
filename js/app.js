@@ -22,6 +22,7 @@ function loadFromStorage() {
       if (username) {
         document.getElementById('user-section').style.display = 'none';
         document.getElementById('main-content').style.display = 'block';
+        document.getElementById('current-user').textContent = username;
         fetchAnime();
       }
     } catch(e) {}
@@ -392,7 +393,18 @@ function startVoting() {
   saveToStorage();
   document.getElementById('user-section').style.display = 'none';
   document.getElementById('main-content').style.display = 'block';
+  document.getElementById('current-user').textContent = username;
   fetchAnime();
+}
+
+function changeUser() {
+  var newName = prompt('Nuevo nombre:', username);
+  if (newName && newName.trim()) {
+    username = newName.trim();
+    document.getElementById('username').value = username;
+    document.getElementById('current-user').textContent = username;
+    saveToStorage();
+  }
 }
 
 document.addEventListener('keydown', function(e) {

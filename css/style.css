@@ -45,6 +45,33 @@ button {
 #btn-start { background: #FFD700; color: #000; font-weight: bold; }
 #btn-start:hover { background: #FFC107; }
 
+/* User Bar */
+#user-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  padding: 10px;
+  background: #1a1a2e;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+#current-user {
+  color: #FFD700;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+#btn-change-user {
+  background: #555;
+  color: #fff;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  border-radius: 6px;
+}
+#btn-change-user:hover { background: #777; }
+
 /* Progress */
 #progress-bar {
   background: #1a1a2e;
