@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Party Rank - Summer 2026</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+</head>
+<body>
+  <div id="app">
+    <header>
+      <h1>Party Rank</h1>
+      <p class="subtitle">Summer 2026 - Vota tus openings y endings favoritos</p>
+      <div id="user-section">
+        <input type="text" id="username" placeholder="Tu nombre de Discord" />
+        <button id="btn-start" onclick="startVoting()">Entrar</button>
+      </div>
+    </header>
+
+    <div id="main-content" style="display:none;">
+      <div id="progress-bar">
+        <div id="progress-fill"></div>
+        <span id="progress-text">0/0</span>
+      </div>
+
+      <div id="player-section">
+        <div id="now-playing">
+          <div id="media-container">
+            <div id="loading-spinner" style="display:none">
+              <div class="spinner"></div>
+              <span>Cargando...</span>
+            </div>
+            <video id="anime-video" poster="" muted style="display:none"></video>
+            <audio id="audio-player" style="display:none"></audio>
+            <img id="anime-cover" src="" alt="" style="display:none" />
+          </div>
+          <div id="song-info">
+            <h2 id="anime-title">Selecciona un anime</h2>
+            <p id="song-name">-</p>
+            <div id="player-controls">
+              <button onclick="prevSong()" title="Anterior">⏮</button>
+              <button id="btn-play" onclick="togglePlay()" title="Play/Pause">▶</button>
+              <button onclick="nextSong()" title="Siguiente">⏭</button>
+              <button id="btn-mode" onclick="toggleMode()" title="Cambiar video/audio">🎬</button>
+              <button id="btn-mute" onclick="toggleMute()" title="Mute">🔇</button>
+            </div>
+            <div id="volume-control">
+              <span>🔊</span>
+              <input type="range" id="volume-slider" min="0" max="100" value="70" oninput="setVolume(this.value)">
+              <span id="volume-val">70%</span>
+            </div>
+          </div>
+        </div>
+
+        <div id="rating-section">
+          <p>Tu puntuacion:</p>
+          <div id="rating-stars">
+            <span class="star" data-value="1" onclick="setRating(1)">★</span>
+            <span class="star" data-value="2" onclick="setRating(2)">★</span>
+            <span class="star" data-value="3" onclick="setRating(3)">★</span>
+            <span class="star" data-value="4" onclick="setRating(4)">★</span>
+            <span class="star" data-value="5" onclick="setRating(5)">★</span>
+            <span class="star" data-value="6" onclick="setRating(6)">★</span>
+            <span class="star" data-value="7" onclick="setRating(7)">★</span>
+            <span class="star" data-value="8" onclick="setRating(8)">★</span>
+            <span class="star" data-value="9" onclick="setRating(9)">★</span>
+            <span class="star" data-value="10" onclick="setRating(10)">★</span>
+          </div>
+          <div id="decimal-rating">
+            <input type="number" id="decimal-input" min="0" max="10" step="0.01" placeholder="o escribe un decimal (ej: 7.50)" oninput="setDecimalRating()">
+          </div>
+          <p id="rating-display">0.00</p>
+          <button id="btn-save" onclick="saveAndNext()">Guardar y siguiente</button>
+        </div>
+      </div>
+
+      <div id="anime-list">
+        <h3>Animes de la temporada</h3>
+        <div id="anime-grid"></div>
+      </div>
+
+      <div id="actions">
+        <button id="btn-download" onclick="downloadExcel()">Descargar Excel</button>
+        <button id="btn-reset" onclick="resetAll()">Reiniciar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
