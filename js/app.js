@@ -22,7 +22,7 @@ function loadFromStorage() {
       if (username) {
         document.getElementById('user-section').style.display = 'none';
         document.getElementById('main-content').style.display = 'block';
-        document.getElementById('current-user').textContent = username;
+        updateUserAvatar();
         fetchAnime();
       }
     } catch(e) {}
@@ -393,21 +393,48 @@ function startVoting() {
   saveToStorage();
   document.getElementById('user-section').style.display = 'none';
   document.getElementById('main-content').style.display = 'block';
-  document.getElementById('current-user').textContent = username;
+  updateUserAvatar();
   fetchAnime();
 }
 
-function changeUser() {
-  var newName = prompt('Nuevo nombre:', username);
-  if (newName && newName.trim()) {
-    username = newName.trim();
-    document.getElementById('username').value = username;
-    document.getElementById('current-user').textContent = username;
-    saveToStorage();
+function updateUserAvatar() {
+  var avatar = document.getElementById('user-avatar');
+  if (avatar && username) {
+    avatar.textContent = username.charAt(0).toUpperCase();
   }
 }
 
+function openUserModal() {
+  document.getElementById('modal-username').value = username;
+  document.getElementById('modal-overlay').style.display = 'flex';
+  setTimeout(function() { document.getElementById('modal-username').focus(); }, 100);
+}
+
+function closeUserModal() {
+  document.getElementById('modal-overlay').style.display = 'none';
+}
+
+function saveUserName() {
+  var newName = document.getElementById('modal-username').value.trim();
+  if (newName && newName !== username) {
+    username = newName;
+    document.getElementById('username').value = username;
+    updateUserAvatar();
+    saveToStorage();
+  }
+  closeUserModal();
+}
+
+function changeUser() { openUserModal(); }
+
 document.addEventListener('keydown', function(e) {
+  var modal = document.getElementById('modal-overlay');
+  if (modal && modal.style.display === 'flex') {
+    if (e.key === 'Enter') { e.preventDefault(); saveUserName(); }
+    if (e.key === 'Escape') { closeUserModal(); }
+    return;
+  }
+
   var active = document.activeElement;
   var isDecimalInput = active && active.id === 'decimal-input';
 

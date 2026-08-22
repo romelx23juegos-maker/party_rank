@@ -19,9 +19,9 @@
     </header>
 
     <div id="main-content" style="display:none;">
-      <div id="user-bar">
-        <span id="current-user"></span>
-        <button id="btn-change-user" onclick="changeUser()">Cambiar nombre</button>
+      <div id="user-avatar-area">
+        <div id="gear-icon" onclick="openUserModal()" title="Configuracion">⚙</div>
+        <div id="user-avatar" onclick="openUserModal()" title="Cambiar nombre"></div>
       </div>
       <div id="progress-bar">
         <div id="progress-fill"></div>
@@ -88,6 +88,17 @@
       <div id="actions">
         <button id="btn-download" onclick="downloadExcel()">Descargar Excel</button>
         <button id="btn-reset" onclick="resetAll()">Reiniciar</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="modal-overlay" style="display:none" onclick="closeUserModal()">
+    <div id="modal" onclick="event.stopPropagation()">
+      <h3>Editar nombre</h3>
+      <input type="text" id="modal-username" placeholder="Tu nombre" />
+      <div id="modal-actions">
+        <button onclick="saveUserName()">Guardar</button>
+        <button onclick="closeUserModal()" style="background:#555">Cancelar</button>
       </div>
     </div>
   </div>
