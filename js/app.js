@@ -318,7 +318,16 @@ function onDecimalInput(el) {
 function onDecimalKey(e) {
   if (e.key === 'Enter') {
     e.preventDefault();
+    syncRatingFromInput();
     saveAndNext();
+  }
+}
+
+function syncRatingFromInput() {
+  var input = document.getElementById('decimal-input');
+  var val = parseFloat(input.value);
+  if (!isNaN(val) && val >= 0 && val <= 10) {
+    currentRating = Math.round(val * 100) / 100;
   }
 }
 
@@ -348,6 +357,7 @@ function updateRatingDisplay() {
 }
 
 function saveAndNext() {
+  syncRatingFromInput();
   if (currentRating === 0) { alert('Selecciona una puntuacion primero'); return; }
   ratings[allSongs[currentIndex].slug] = currentRating;
   try { saveToStorage(); } catch(e) { console.error('Save error:', e); }
