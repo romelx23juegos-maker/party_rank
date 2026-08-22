@@ -272,7 +272,14 @@ function openAnimePage() {
   window.open(url, '_blank');
 }
 
-function setRating(v) { currentRating = v; updateRatingDisplay(); }
+function setRating(v) {
+  currentRating = v;
+  updateRatingDisplay();
+  if (allSongs[currentIndex]) {
+    ratings[allSongs[currentIndex].slug] = currentRating;
+    try { saveToStorage(); } catch(e) {}
+  }
+}
 
 function onDecimalInput(el) {
   var val = el.value.replace(/[^0-9.]/g, '');
@@ -285,6 +292,10 @@ function onDecimalInput(el) {
   if (!isNaN(num) && num >= 0 && num <= 10) {
     currentRating = Math.round(num * 100) / 100;
     updateStarsOnly();
+    if (allSongs[currentIndex]) {
+      ratings[allSongs[currentIndex].slug] = currentRating;
+      try { saveToStorage(); } catch(e) {}
+    }
   }
 }
 
@@ -323,10 +334,20 @@ function updateRatingDisplay() {
 function saveAndNext() {
   if (currentRating === 0) { alert('Selecciona una puntuacion primero'); return; }
   ratings[allSongs[currentIndex].slug] = currentRating;
-  saveToStorage();
+  try { saveToStorage(); } catch(e) { console.error('Save error:', e); }
   if (currentIndex < allSongs.length - 1) playSong(currentIndex + 1);
   else alert('Terminaste de votar todos los animes!');
 }
+
+window.addEventListener('beforeunload', function() {
+  try { saveToStorage(); } catch(e) {}
+});
+
+window.addEventListener('visibilitychange', function() {
+  if (document.hidden) {
+    try { saveToStorage(); } catch(e) {}
+  }
+});
 
 function updateProgress() {
   var total = allSongs.length;
