@@ -51,19 +51,12 @@ button {
   top: 15px;
   right: 20px;
   z-index: 100;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
 }
 
-#gear-icon {
-  font-size: 1.1rem;
-  cursor: pointer;
-  color: #888;
-  transition: color 0.2s, transform 0.3s;
+#user-avatar-wrap {
+  position: relative;
+  display: inline-block;
 }
-#gear-icon:hover { color: #FFD700; transform: rotate(90deg); }
 
 #user-avatar {
   width: 44px;
@@ -81,6 +74,24 @@ button {
   box-shadow: 0 2px 8px rgba(255, 215, 0, 0.3);
 }
 #user-avatar:hover { transform: scale(1.1); box-shadow: 0 4px 12px rgba(255, 215, 0, 0.5); }
+
+#gear-icon {
+  position: absolute;
+  bottom: -4px;
+  right: -6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+  color: #888;
+  background: #1a1a2e;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s, transform 0.3s;
+}
+#gear-icon:hover { color: #FFD700; transform: rotate(90deg); }
 
 /* Modal */
 #modal-overlay {
