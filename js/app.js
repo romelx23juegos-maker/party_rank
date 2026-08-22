@@ -62,6 +62,10 @@ async function fetchAnime() {
   var grid = document.getElementById('anime-grid');
   grid.innerHTML = '<p class="section-header" style="text-align:center;color:#FFD700">Cargando animes...</p>';
 
+  showLoading();
+  document.getElementById('anime-title').textContent = 'Cargando animes de ' + SEASON + ' ' + YEAR + '...';
+  document.getElementById('song-name').textContent = 'Espera un momento';
+
   var page = 1;
   var hasMore = true;
   allSongs = [];
@@ -132,6 +136,17 @@ async function fetchAnime() {
   isLoading = false;
   renderAnimeList();
   updateModeButton();
+
+  if (allSongs.length > 0) {
+    var savedIdx = 0;
+    for (var s = 0; s < allSongs.length; s++) {
+      if (ratings[allSongs[s].slug] === undefined || ratings[allSongs[s].slug] === 0) {
+        savedIdx = s;
+        break;
+      }
+    }
+    playSong(savedIdx);
+  }
 }
 
 function renderAnimeList() {
@@ -179,11 +194,12 @@ function playSong(idx) {
   document.getElementById('anime-title').textContent = song.animeName;
   document.getElementById('song-name').textContent = song.type + (song.sequence || '');
 
-  showLoading();
-
   var video = document.getElementById('anime-video');
   var audio = document.getElementById('audio-player');
   var cover = document.getElementById('anime-cover');
+
+  cover.src = song.coverUrl || '';
+  showLoading();
 
   if (useVideoMode) {
     video.poster = song.coverUrl || '';
@@ -197,7 +213,6 @@ function playSong(idx) {
       hideLoading();
     });
   } else {
-    cover.src = song.coverUrl || '';
     audio.src = song.videoUrl;
     audio.oncanplay = function() { hideLoading(); audio.oncanplay = null; };
     audio.onerror = function() { hideLoading(); audio.onerror = null; };
