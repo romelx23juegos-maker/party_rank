@@ -9,6 +9,7 @@ var username = '';
 var ratings = {};
 var isLoading = false;
 var useVideoMode = true;
+var isSwitchingMode = false;
 
 function loadFromStorage() {
   var saved = localStorage.getItem('pr_' + SEASON + YEAR);
@@ -188,6 +189,8 @@ function renderAnimeList() {
 function esc(t) { var d = document.createElement('div'); d.textContent = t; return d.innerHTML; }
 
 function playSong(idx) {
+  if (isSwitchingMode) return;
+
   currentIndex = idx;
   var song = allSongs[idx];
 
@@ -197,6 +200,13 @@ function playSong(idx) {
   var video = document.getElementById('anime-video');
   var audio = document.getElementById('audio-player');
   var cover = document.getElementById('anime-cover');
+
+  video.pause();
+  audio.pause();
+  video.oncanplay = null;
+  video.onerror = null;
+  audio.oncanplay = null;
+  audio.onerror = null;
 
   cover.src = song.coverUrl || '';
   showLoading();
@@ -263,10 +273,22 @@ function setVolume(val) {
 }
 
 function toggleMode() {
+  if (isSwitchingMode) return;
+  isSwitchingMode = true;
+
+  var video = document.getElementById('anime-video');
+  var audio = document.getElementById('audio-player');
+  video.pause();
+  audio.pause();
+
   useVideoMode = !useVideoMode;
   saveToStorage();
   updateModeButton();
-  if (allSongs.length > 0) playSong(currentIndex);
+
+  setTimeout(function() {
+    isSwitchingMode = false;
+    if (allSongs.length > 0) playSong(currentIndex);
+  }, 50);
 }
 
 function updateModeButton() {
